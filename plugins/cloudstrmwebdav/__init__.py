@@ -1,3 +1,4 @@
+
 import json
 import os
 import shutil
@@ -753,6 +754,22 @@ class CloudStrmwebdav(_PluginBase):
                                     {
                                         'component': 'VSwitch',
                                         'props': {
+                                            'model': 'https',
+                                            'label': '启用https',
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                'component': 'VCol',
+                                'props': {
+                                    'cols': 12,
+                                    'md': 4
+                                },
+                                'content': [
+                                    {
+                                        'component': 'VSwitch',
+                                        'props': {
                                             'model': 'alist_webdav',
                                             'label': 'webdav模式',
                                         }
@@ -798,24 +815,6 @@ class CloudStrmwebdav(_PluginBase):
                                     }
                                 ]
                             }
-                        ]
-                    },
-                            {
-                                'component': 'VCol',
-                                'props': {
-                                    'cols': 12,
-                                    'md': 4
-                                },
-                                'content': [
-                                    {
-                                        'component': 'VSwitch',
-                                        'props': {
-                                            'model': 'https',
-                                            'label': '启用https',
-                                        }
-                                    }
-                                ]
-                            },
                         ]
                     },
                     {
