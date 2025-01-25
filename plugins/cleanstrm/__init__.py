@@ -319,7 +319,7 @@ class CleanStrm(_PluginBase):
         ], {
             "enable": False,
             "onlyonce": False,
-            "cleandir": True,
+            "cleandir": False,
             "cron": "30 4 * * *",
             "cleanuser": ""
         }
