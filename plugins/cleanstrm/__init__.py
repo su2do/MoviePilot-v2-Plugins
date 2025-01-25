@@ -284,10 +284,10 @@ class CleanStrm(_PluginBase):
                                             'label': '清理配置（若有多个，一行一个）',
                                             'placeholder': '每一行一个配置，后缀可不填若填写了后缀，则strm中的后缀部分将替换为所填后缀，若无替换词可留空\n'
                                                            'strmpath#replacefrom#replaceto#suffix\n'
-                                                           '检查目录#被替换词#替换词#后缀\n'
-                                                           '/strm/电影#http://127.0.0.1:5344/d#/云盘挂载/xiaoyabox/电影\n'
-                                                           '/strm媒体库/电影#http://127.0.0.1:5344/d#/strm生成库/电影#strm\n'
-                                                           '/strm媒体库/电影\n',
+                                                           '示例：检查目录#被替换词#替换词#后缀\n'
+                                                           '1、/strm/电影#http://127.0.0.1:5344/d#/云盘挂载/xiaoyabox/电影\n'
+                                                           '2、/strm媒体库/电影#http://127.0.0.1:5344/d#/strm生成库/电影#strm\n'
+                                                           '3、/strm媒体库/电影\n',
                                         }
                                     }
                                 ]
