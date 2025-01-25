@@ -34,6 +34,19 @@
     "history": {
       "v1.1": "某种场景下可能出现卡死，修复bug",
       "v1.0": "增量监控"
+    },
+  "CloudStrmIncrement": {
+    "name": "定时清理无效strm",
+    "description": "定时清理无效strm文件",
+    "labels": "strm",
+    "version": "1.0",
+    "icon": "https://raw.githubusercontent.com/su2do/MoviePilot-v2-Plugins/main/icons/create.png",
+    "author": "su2do",
+    "level": 2,
+    "v2": true,
+    "history": {
+      "v1.1": "增加清理文件夹选项",
+      "v1.0": "定时清理无效strm"
     }
   },
   "StrmConvert": {
