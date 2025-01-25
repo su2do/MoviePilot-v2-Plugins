@@ -36,7 +36,7 @@ class CleanStrm(_PluginBase):
     # 加载顺序
     plugin_order = 23
     # 可使用的用户级别
-    auth_level = 2
+    auth_level = 1
 
     # 私有属性
     _enabled = False
@@ -60,18 +60,13 @@ class CleanStrm(_PluginBase):
             self._cleandir = config.get("cleandir")
             self._cleanuser = config.get("cleanuser")
 
-            cleanconfig = self._cleanuser
-            self.strmpath = cleanconfig.split("#")[0]
-            self.replacefrom = cleanconfig.split("#")[1]
-            self.replaceto = cleanconfig.split("#")[2]
-            self.suffix = cleanconfig.split("#")[3]
-
             # 加载模块
         if self._enabled:
 
             if self._onlyonce:
                 # 定时服务
                 self._scheduler = BackgroundScheduler(timezone=settings.TZ)
+
                 logger.info(f"定时清理无效strm服务启动，立即运行一次")
                 self._scheduler.add_job(func=self.__clean, trigger='date',
                                         run_date=datetime.now(tz=pytz.timezone(settings.TZ)) + timedelta(seconds=3),
@@ -92,36 +87,52 @@ class CleanStrm(_PluginBase):
                     self._scheduler.start()
 
     def __clean(self):
-        strm_path = self.strmpath
-        replace_from = self.replacefrom
-        replace_to = self.replaceto
-        for root,dirs,files in os.walk(strm_path):
-            for name in files:
-                #print name
-                if name.endswith(".strm"):
-                    #print root,dirs,name
-                    filename=root+"/"+name
-                    f=open(filename,"r")
-                    #filecontent=""
-                    media=f.read()
-                    #print(line)
-                    strm_path=urllib.parse.unquote(media)
-                    if not self.suffix
-                        if not os.path.exists(replace_to+strm_path.replace(replace_from,'')):# 检查文件是否存在
-                            print(strm_path+'已删除')
-                            os.remove(filename)  # 删除文件
+        suffix = None
+        for cleanconfig in str(self._cleanuser).split("\n"):
+            if cleanconfig.count('#') == 0:
+                strm_path = cleanconfig
+            elif cleanconfig.count('#') == 1:
+                strm_path = cleanconfig.split('#')[0]
+                suffix = cleanconfig.split('#')[1]
+            elif cleanconfig.count('#') == 2:
+                strm_path = cleanconfig.split("#")[0]
+                replace_from = cleanconfig.split("#")[1]
+                replace_to = cleanconfig.split("#")[2]
+            elif cleanconfig.count('#') == 3:
+                strm_path = cleanconfig.split("#")[0]
+                replace_from = cleanconfig.split("#")[1]
+                replace_to = cleanconfig.split("#")[2]
+                suffix = cleanconfig.split("#")[3]
+            else:
+                logger.error(f"{cleanconfig} 格式错误")
+                continue
+            for root,dirs,files in os.walk(strm_path):
+                for name in files:
+                    #print name
+                    if name.endswith(".strm"):
+                        #print root,dirs,name
+                        filename=root+"/"+name
+                        f=open(filename,"r")
+                        #filecontent=""
+                        media=f.read()
+                        #print(line)
+                        strm_path=urllib.parse.unquote(media)
+                        if suffix == None:
+                            if not os.path.exists(replace_to+strm_path.replace(replace_from,'')):# 检查文件是否存在
+                                print(strm_path+'已删除')
+                                os.remove(filename)  # 删除文件
+                            else:
+                                print(strm_path+'有效')
                         else:
-                            print(strm_path+'有效')
-                    else:
-                        if not os.path.exists(replace_to+strm_path.replace(replace_from,'')[:-3]+self.suffix):# 检查文件是否存在
-                            print(strm_path+'已删除')
-                            os.remove(filename)  # 删除文件
-                        else:
-                            print(strm_path+'有效')
-        print('无效strm处理完毕！')
-        if self._cleandir:
+                            if not os.path.exists(replace_to+strm_path.replace(replace_from,'')[:-3]+suffix):# 检查文件是否存在
+                                print(strm_path+'已删除')
+                                os.remove(filename)  # 删除文件
+                            else:
+                                print(strm_path+'有效')
+            if _cleandir(strm_path):
             print('开始清理空文件夹！')
             self.__clean_dir
+        print('无效strm处理完毕！')
 
     def __is_empty_dir(directory):
         # 获取目录中的所有文件和文件夹
@@ -141,8 +152,8 @@ class CleanStrm(_PluginBase):
         # 如果所有条目都是媒体文件或为空，返回True
         return True
 
-    def __clean_dir(self):
-        strm_path = self.strmpath
+    def __clean_dir(directory):
+        strm_path = directory
         for root,dirs,files in os.walk(strm_path, topdown=False):
             for dir in dirs:
                 full_dir_path = os.path.join(root, dir)
@@ -182,7 +193,6 @@ class CleanStrm(_PluginBase):
                     "kwargs": {}
                 }
             ]
-
 
     def get_form(self) -> Tuple[List[dict], Dict[str, Any]]:
         return [
@@ -275,40 +285,10 @@ class CleanStrm(_PluginBase):
                                             'placeholder': '每一行一个配置，后缀可不填若填写了后缀，则strm中的后缀部分将替换为所填后缀，若无替换词可留空\n'
                                                            'strmpath#replacefrom#replaceto#suffix\n'
                                                            '检查目录#被替换词#替换词#后缀\n'
+                                                           '/strm/电影#http://127.0.0.1:5344/d#/云盘挂载/xiaoyabox/电影\n'
+                                                           '/strm媒体库/电影#http://127.0.0.1:5344/d#/strm生成库/电影#strm\n'
+                                                           '/strm媒体库/电影\n',
                                         }
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        'component': 'VRow',
-                        'content': [
-                            {
-                                'component': 'VCol',
-                                'props': {
-                                    'cols': 12,
-                                },
-                                'content': [
-                                    {
-                                        'component': 'VAlert',
-                                        'props': {
-                                            'type': 'success',
-                                            'variant': 'tonal',
-                                            'text': '示例配置1：/strm/电影#http://127.0.0.1:5344/d#/云盘挂载/xiaoyabox/电影#'
-                                        }
-                                    }, {
-                                        'component': 'VAlert',
-                                        'props': {
-                                            'type': 'success',
-                                            'variant': 'tonal',
-                                            'text': '示例配置2：/strm媒体库/电影#http://127.0.0.1:5344/d#/strm生成库/电影#strm'
-                                        }, {
-                                        'component': 'VAlert',
-                                        'props': {
-                                            'type': 'success',
-                                            'variant': 'tonal',
-                                            'text': '示例配置3：/strm媒体库/电影###'
                                     }
                                 ]
                             }
@@ -320,8 +300,8 @@ class CleanStrm(_PluginBase):
             "enable": False,
             "onlyonce": False,
             "cleandir": True,
-            "cron": '30 4 * * *',
-            "cleanuser": ''
+            "cron": "30 4 * * *",
+            "cleanuser": ""
         }
 
     def get_page(self) -> List[dict]:
