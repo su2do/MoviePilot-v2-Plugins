@@ -47,7 +47,7 @@ class CleanStrm(_PluginBase):
     _cleanuser = None
 
     # 定时器
-     #_scheduler: Optional[BackgroundScheduler] = None
+    _scheduler: Optional[BackgroundScheduler] = None
 
     def init_plugin(self, config: dict = None):
 
@@ -63,6 +63,37 @@ class CleanStrm(_PluginBase):
 
         # 停止现有任务
         self.stop_service()
+
+        if self._enabled or self._onlyonce:
+            # 定时服务
+            self._scheduler = BackgroundScheduler(timezone=settings.TZ)
+
+            # 运行一次定时服务
+            if self._onlyonce:
+                logger.info("定时清理无效strm服务启动，立即运行一次")
+                self._scheduler.add_job(func=self.clean, trigger='date',
+                                        run_date=datetime.now(tz=pytz.timezone(settings.TZ)) + timedelta(seconds=3),
+                                        name="定时清理无效strm")
+                # 关闭一次性开关
+                self._onlyonce = False
+                # 保存配置
+                self.__update_config()
+
+            # 周期运行
+            if self._cron:
+                try:
+                    self._scheduler.add_job(func=self.clean,
+                                            trigger=CronTrigger.from_crontab(self._cron),
+                                            name="定时清理无效strm")
+                except Exception as err:
+                    logger.error(f"定时任务配置错误：{err}")
+                    # 推送实时消息
+                    self.systemmessage.put(f"执行周期配置错误：{err}")
+
+            # 启动任务
+            if self._scheduler.get_jobs():
+                self._scheduler.print_jobs()
+                self._scheduler.start()
 
     def clean(self):
         suffix = None
@@ -108,6 +139,34 @@ class CleanStrm(_PluginBase):
                             else:
                                 print(strm_path+'有效')
         print('无效strm处理完毕！')
+
+    def __is_empty_dir(directory):
+        # 获取目录中的所有文件和文件夹
+        entries = os.listdir(directory)
+        # 检查每个条目是否为媒体文件或文件夹
+        for entry in entries:
+            full_path = os.path.join(directory, entry)
+            if os.path.isdir(full_path):
+                # 如果目录不为空或者包含非strm文件，返回False
+                if not __is_empty_dir(full_path):
+                    return False
+            else:
+                # 检查文件扩展名是否为媒体文件类型
+                _, ext = os.path.splitext(full_path)
+                if ext.lower() in ['.strm']:
+                    return False
+        # 如果所有条目都是媒体文件或为空，返回True
+        return True
+
+    def __clean_dir(directory):
+        strm_path = directory
+        for root,dirs,files in os.walk(strm_path, topdown=False):
+            for dir in dirs:
+                full_dir_path = os.path.join(root, dir)
+                if  __is_empty_dir(full_dir_path):
+                    shutil.rmtree(full_dir_path)
+                    print(f"Deleted: {full_dir_path}")
+        print('清理空文件夹完成！')
 
     def __update_config(self):
         """
@@ -258,7 +317,7 @@ class CleanStrm(_PluginBase):
         ], {
             "enable": False,
             "onlyonce": False,
-            "cleandir": False,
+            "cleandir": True,
             "cron": "30 4 * * *",
             "cleanuser": ""
         }
