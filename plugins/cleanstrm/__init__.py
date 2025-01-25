@@ -311,7 +311,7 @@ class CleanStrm(_PluginBase):
             "onlyonce": False,
             "cleandir": True,
             "cron": '30 4 * * *',
-            "cleanuser": '',
+            "cleanuser": ''
         }
 
     def stop_service(self):
@@ -325,14 +325,4 @@ class CleanStrm(_PluginBase):
             logger.error("退出插件失败：%s" % str(e))
 
     def get_page(self) -> List[dict]:
-        pass
-
-    def get_state(self) -> bool:
-        return self._enable
-
-    @staticmethod
-    def get_command() -> List[Dict[str, Any]]:
-        pass
-
-    def get_api(self) -> List[Dict[str, Any]]:
         pass
