@@ -151,6 +151,16 @@ class CleanStrm(_PluginBase):
                     print(f"Deleted: {full_dir_path}")
         print('清理空文件夹完成！')
 
+    def get_state(self) -> bool:
+        return self._enabled
+
+    @staticmethod
+    def get_command() -> List[Dict[str, Any]]:
+        pass
+
+    def get_api(self) -> List[Dict[str, Any]]:
+        pass
+
     def get_service(self) -> List[Dict[str, Any]]:
         """
         注册插件公共服务
@@ -314,6 +324,9 @@ class CleanStrm(_PluginBase):
             "cleanuser": ''
         }
 
+    def get_page(self) -> List[dict]:
+        pass
+
     def stop_service(self):
         try:
             if self._scheduler:
@@ -323,6 +336,3 @@ class CleanStrm(_PluginBase):
                 self._scheduler = None
         except Exception as e:
             logger.error("退出插件失败：%s" % str(e))
-
-    def get_page(self) -> List[dict]:
-        pass
