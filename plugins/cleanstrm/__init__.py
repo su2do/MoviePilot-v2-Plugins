@@ -139,8 +139,8 @@ class CleanStrm(_PluginBase):
                             else:
                                 print(strm_path+'有效')
             if self._cleandir:
-            print('开始清理空文件夹！')
-            __clean_dir(strm_path)
+                print('开始清理空文件夹！')
+                __clean_dir(strm_path)
         print('无效strm处理完毕！')
 
     def __is_empty_dir(directory):
