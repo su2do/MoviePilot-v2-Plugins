@@ -124,22 +124,22 @@ class CleanStrm(_PluginBase):
             self.__clean_dir
 
     def __is_empty_dir(directory):
-    # 获取目录中的所有文件和文件夹
-    entries = os.listdir(directory)
-    # 检查每个条目是否为媒体文件或文件夹
-    for entry in entries:
-        full_path = os.path.join(directory, entry)
-        if os.path.isdir(full_path):
-            # 如果目录不为空或者包含非strm文件，返回False
-            if not __is_empty_dir(full_path):
-                return False
-        else:
-            # 检查文件扩展名是否为媒体文件类型
-            _, ext = os.path.splitext(full_path)
-            if ext.lower() in ['.strm']:
-                return False
-    # 如果所有条目都是媒体文件或为空，返回True
-    return True
+        # 获取目录中的所有文件和文件夹
+        entries = os.listdir(directory)
+        # 检查每个条目是否为媒体文件或文件夹
+        for entry in entries:
+            full_path = os.path.join(directory, entry)
+            if os.path.isdir(full_path):
+                # 如果目录不为空或者包含非strm文件，返回False
+                if not __is_empty_dir(full_path):
+                    return False
+            else:
+                # 检查文件扩展名是否为媒体文件类型
+                _, ext = os.path.splitext(full_path)
+                if ext.lower() in ['.strm']:
+                    return False
+        # 如果所有条目都是媒体文件或为空，返回True
+        return True
 
     def __clean_dir(self):
         strm_path = self.strmpath
@@ -309,19 +309,10 @@ class CleanStrm(_PluginBase):
         ], {
             "enable": False,
             "onlyonce": False,
-            "flitter": True,
+            "cleandir": True,
             "cron": '30 4 * * *',
-            "file_urls": '',
+            "cleanuser": '',
         }
-
-    def __update_config(self):
-        self.update_config({
-            "onlyonce": self._onlyonce,
-            "cron": self._cron,
-            "enable": self._enable,
-            "flitter": self._flitter,
-            "file_urls": self._file_urls,
-        })
 
     def stop_service(self):
         try:
