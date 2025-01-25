@@ -35,7 +35,7 @@
       "v1.1": "某种场景下可能出现卡死，修复bug",
       "v1.0": "增量监控"
     },
-  "CloudStrmIncrement": {
+  "CleanStrm": {
     "name": "定时清理无效strm",
     "description": "定时清理无效strm文件",
     "labels": "strm",
