@@ -47,7 +47,7 @@ class CleanStrm(_PluginBase):
     _cleanuser = None
 
     # 定时器
-    _scheduler: Optional[BackgroundScheduler] = None
+    #_scheduler: Optional[BackgroundScheduler] = None
 
     def init_plugin(self, config: dict = None):
 
