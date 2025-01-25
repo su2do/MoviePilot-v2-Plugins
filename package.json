@@ -40,7 +40,7 @@
     "description": "定时清理无效strm文件",
     "labels": "strm",
     "version": "1.0",
-    "icon": "https://raw.githubusercontent.com/su2do/MoviePilot-v2-Plugins/main/icons/create.png",
+    "icon": "https://raw.githubusercontent.com/su2do/MoviePilot-v2-Plugins/main/icons/clean.png",
     "author": "su2do",
     "level": 2,
     "v2": true,
