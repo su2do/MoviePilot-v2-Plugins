@@ -36,7 +36,7 @@ class CleanStrm(_PluginBase):
     # 加载顺序
     plugin_order = 23
     # 可使用的用户级别
-    auth_level = 2
+    auth_level = 1
 
     # 私有属性
     _enabled = False
@@ -129,7 +129,7 @@ class CleanStrm(_PluginBase):
                                 os.remove(filename)  # 删除文件
                             else:
                                 print(strm_path+'有效')
-            if self._cleandir(strm_path):
+            if _cleandir(strm_path):
             print('开始清理空文件夹！')
             self.__clean_dir
         print('无效strm处理完毕！')
@@ -152,7 +152,7 @@ class CleanStrm(_PluginBase):
         # 如果所有条目都是媒体文件或为空，返回True
         return True
 
-    def __clean_dir(self,directory):
+    def __clean_dir(directory):
         strm_path = directory
         for root,dirs,files in os.walk(strm_path, topdown=False):
             for dir in dirs:
@@ -193,7 +193,6 @@ class CleanStrm(_PluginBase):
                     "kwargs": {}
                 }
             ]
-
 
     def get_form(self) -> Tuple[List[dict], Dict[str, Any]]:
         return [
@@ -286,40 +285,10 @@ class CleanStrm(_PluginBase):
                                             'placeholder': '每一行一个配置，后缀可不填若填写了后缀，则strm中的后缀部分将替换为所填后缀，若无替换词可留空\n'
                                                            'strmpath#replacefrom#replaceto#suffix\n'
                                                            '检查目录#被替换词#替换词#后缀\n'
+                                                           '/strm/电影#http://127.0.0.1:5344/d#/云盘挂载/xiaoyabox/电影\n'
+                                                           '/strm媒体库/电影#http://127.0.0.1:5344/d#/strm生成库/电影#strm\n'
+                                                           '/strm媒体库/电影\n',
                                         }
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        'component': 'VRow',
-                        'content': [
-                            {
-                                'component': 'VCol',
-                                'props': {
-                                    'cols': 12,
-                                },
-                                'content': [
-                                    {
-                                        'component': 'VAlert',
-                                        'props': {
-                                            'type': 'success',
-                                            'variant': 'tonal',
-                                            'text': '示例配置1：/strm/电影#http://127.0.0.1:5344/d#/云盘挂载/xiaoyabox/电影#'
-                                        }
-                                    }, {
-                                        'component': 'VAlert',
-                                        'props': {
-                                            'type': 'success',
-                                            'variant': 'tonal',
-                                            'text': '示例配置2：/strm媒体库/电影#http://127.0.0.1:5344/d#/strm生成库/电影#strm'
-                                        }, {
-                                        'component': 'VAlert',
-                                        'props': {
-                                            'type': 'success',
-                                            'variant': 'tonal',
-                                            'text': '示例配置3：/strm媒体库/电影#'
                                     }
                                 ]
                             }
@@ -331,8 +300,8 @@ class CleanStrm(_PluginBase):
             "enable": False,
             "onlyonce": False,
             "cleandir": True,
-            "cron": '30 4 * * *',
-            "cleanuser": ''
+            "cron": "30 4 * * *",
+            "cleanuser": ""
         }
 
     def get_page(self) -> List[dict]:
