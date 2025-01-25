@@ -60,32 +60,6 @@ class CleanStrm(_PluginBase):
             self._cleandir = config.get("cleandir")
             self._cleanuser = config.get("cleanuser")
 
-            # 加载模块
-        if self._enabled:
-
-            if self._onlyonce:
-                # 定时服务
-                self._scheduler = BackgroundScheduler(timezone=settings.TZ)
-
-                logger.info(f"定时清理无效strm服务启动，立即运行一次")
-                self._scheduler.add_job(func=self.__clean, trigger='date',
-                                        run_date=datetime.now(tz=pytz.timezone(settings.TZ)) + timedelta(seconds=3),
-                                        name="定时清理无效strm")
-                # 关闭一次性开关
-                self._onlyonce = False
-                self.update_config({
-                    "onlyonce": False,
-                    "cron": self._cron,
-                    "enabled": self._enabled,
-                    "cleanuser": self._cleanuser,
-                    "cleandir": self._cleandir,
-                })
-
-                # 启动任务
-                if self._scheduler.get_jobs():
-                    self._scheduler.print_jobs()
-                    self._scheduler.start()
-
     def __clean(self):
         suffix = None
         for cleanconfig in str(self._cleanuser).split("\n"):
