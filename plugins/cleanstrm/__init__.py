@@ -68,17 +68,6 @@ class CleanStrm(_PluginBase):
             # 定时服务
             self._scheduler = BackgroundScheduler(timezone=settings.TZ)
 
-            # 运行一次定时服务
-            if self._onlyonce:
-                logger.info("定时清理无效strm服务启动，立即运行一次")
-                self._scheduler.add_job(func=self.clean, trigger='date',
-                                        run_date=datetime.now(tz=pytz.timezone(settings.TZ)) + timedelta(seconds=3),
-                                        name="定时清理无效strm")
-                # 关闭一次性开关
-                self._onlyonce = False
-                # 保存配置
-                self.__update_config()
-
             # 周期运行
             if self._cron:
                 try:
