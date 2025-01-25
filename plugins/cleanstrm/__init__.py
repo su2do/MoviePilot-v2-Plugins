@@ -45,10 +45,7 @@ class CleanStrm(_PluginBase):
     _onlyonce = False
     _cleandir = False
     _cleanuser = None
-
-    # 定时器
-    _scheduler: Optional[BackgroundScheduler] = None
-
+    
     def init_plugin(self, config: dict = None):
         # 停止现有任务
         self.stop_service()
