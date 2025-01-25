@@ -103,38 +103,7 @@ class CleanStrm(_PluginBase):
                                 os.remove(filename)  # 删除文件
                             else:
                                 print(strm_path+'有效')
-            if _cleandir(strm_path):
-            print('开始清理空文件夹！')
-            self.__clean_dir
         print('无效strm处理完毕！')
-
-    def __is_empty_dir(directory):
-        # 获取目录中的所有文件和文件夹
-        entries = os.listdir(directory)
-        # 检查每个条目是否为媒体文件或文件夹
-        for entry in entries:
-            full_path = os.path.join(directory, entry)
-            if os.path.isdir(full_path):
-                # 如果目录不为空或者包含非strm文件，返回False
-                if not __is_empty_dir(full_path):
-                    return False
-            else:
-                # 检查文件扩展名是否为媒体文件类型
-                _, ext = os.path.splitext(full_path)
-                if ext.lower() in ['.strm']:
-                    return False
-        # 如果所有条目都是媒体文件或为空，返回True
-        return True
-
-    def __clean_dir(directory):
-        strm_path = directory
-        for root,dirs,files in os.walk(strm_path, topdown=False):
-            for dir in dirs:
-                full_dir_path = os.path.join(root, dir)
-                if  __is_empty_dir(full_dir_path):
-                    shutil.rmtree(full_dir_path)
-                    print(f"Deleted: {full_dir_path}")
-        print('清理空文件夹完成！')
 
     def get_state(self) -> bool:
         return self._enabled
