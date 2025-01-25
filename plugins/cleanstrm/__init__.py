@@ -47,7 +47,6 @@ class CleanStrm(_PluginBase):
     _cleanuser = None
 
     # 定时器
-    _scheduler: Optional[BackgroundScheduler] = None
 
     def init_plugin(self, config: dict = None):
 
@@ -63,26 +62,6 @@ class CleanStrm(_PluginBase):
 
         # 停止现有任务
         self.stop_service()
-
-        if self._enabled or self._onlyonce:
-            # 定时服务
-            self._scheduler = BackgroundScheduler(timezone=settings.TZ)
-
-            # 周期运行
-            if self._cron:
-                try:
-                    self._scheduler.add_job(func=self.clean,
-                                            trigger=CronTrigger.from_crontab(self._cron),
-                                            name="定时清理无效strm")
-                except Exception as err:
-                    logger.error(f"定时任务配置错误：{err}")
-                    # 推送实时消息
-                    self.systemmessage.put(f"执行周期配置错误：{err}")
-
-            # 启动任务
-            if self._scheduler.get_jobs():
-                self._scheduler.print_jobs()
-                self._scheduler.start()
 
     def clean(self):
         suffix = None
