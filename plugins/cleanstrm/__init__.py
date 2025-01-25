@@ -47,7 +47,7 @@ class CleanStrm(_PluginBase):
     _cleanuser = None
 
     # 定时器
-    #_scheduler: Optional[BackgroundScheduler] = None
+    _scheduler: Optional[BackgroundScheduler] = None
 
     def init_plugin(self, config: dict = None):
 
@@ -71,7 +71,7 @@ class CleanStrm(_PluginBase):
             # 运行一次定时服务
             if self._onlyonce:
                 logger.info("定时清理无效strm服务启动，立即运行一次")
-                self._scheduler.add_job(func=self.__clean, trigger='date',
+                self._scheduler.add_job(func=self.clean, trigger='date',
                                         run_date=datetime.now(tz=pytz.timezone(settings.TZ)) + timedelta(seconds=3),
                                         name="定时清理无效strm")
                 # 关闭一次性开关
@@ -82,7 +82,7 @@ class CleanStrm(_PluginBase):
             # 周期运行
             if self._cron:
                 try:
-                    self._scheduler.add_job(func=self.__clean,
+                    self._scheduler.add_job(func=self.clean,
                                             trigger=CronTrigger.from_crontab(self._cron),
                                             name="定时清理无效strm")
                 except Exception as err:
@@ -95,7 +95,7 @@ class CleanStrm(_PluginBase):
                 self._scheduler.print_jobs()
                 self._scheduler.start()
 
-    def __clean(self):
+    def clean(self):
         suffix = None
         for cleanconfig in str(self._cleanuser).split("\n"):
             if cleanconfig.count('#') == 0:
@@ -210,7 +210,7 @@ class CleanStrm(_PluginBase):
                     "id": "CleanStrm",
                     "name": "清理无效strm定时服务",
                     "trigger": CronTrigger.from_crontab(self._cron),
-                    "func": self.__clean,
+                    "func": self.clean,
                     "kwargs": {}
                 }
             ]
@@ -305,7 +305,7 @@ class CleanStrm(_PluginBase):
                                             'label': '清理配置（若有多个，一行一个）',
                                             'placeholder': '每一行一个配置，后缀可不填若填写了后缀，则strm中的后缀部分将替换为所填后缀，若无替换词可留空\n'
                                                            'strmpath#replacefrom#replaceto#suffix\n'
-                                                           '示例:检查目录#被替换词#替换词#后缀\n'
+                                                           '示例：检查目录#被替换词#替换词#后缀\n'
                                                            '1、/strm/电影#http://127.0.0.1:5344/d#/云盘挂载/xiaoyabox/电影\n'
                                                            '2、/strm媒体库/电影#http://127.0.0.1:5344/d#/strm生成库/电影#strm\n'
                                                            '3、/strm媒体库/电影\n',
