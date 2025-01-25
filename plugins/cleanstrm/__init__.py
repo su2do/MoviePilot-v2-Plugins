@@ -138,9 +138,9 @@ class CleanStrm(_PluginBase):
                                 os.remove(filename)  # 删除文件
                             else:
                                 print(strm_path+'有效')
-            if _cleandir(strm_path):
+            if self._cleandir:
             print('开始清理空文件夹！')
-            self.__clean_dir
+            __clean_dir(strm_path)
         print('无效strm处理完毕！')
 
     def __is_empty_dir(directory):
