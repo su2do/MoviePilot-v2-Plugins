@@ -128,20 +128,26 @@ class CleanStrm(_PluginBase):
                         strm_path=urllib.parse.unquote(media)
                         if suffix == None:
                             if not os.path.exists(replace_to+strm_path.replace(replace_from,'')):# 检查文件是否存在
-                                print(strm_path+'已删除')
+                                logger.info(f"{strm_path} 已删除")
+                                #print(strm_path+'已删除')
                                 os.remove(filename)  # 删除文件
                             else:
-                                print(strm_path+'有效')
+                                logger.info(f"{strm_path} 有效")
+                                #print(strm_path+'有效')
                         else:
                             if not os.path.exists(replace_to+strm_path.replace(replace_from,'')[:-3]+suffix):# 检查文件是否存在
-                                print(strm_path+'已删除')
+                                logger.info(f"{strm_path} 已删除")
+                                #print(strm_path+'已删除')
                                 os.remove(filename)  # 删除文件
                             else:
-                                print(strm_path+'有效')
+                                logger.info(f"{strm_path} 有效")
+                                #print(strm_path+'有效')
             if self._cleandir:
-                print('开始清理空文件夹！')
+                logger.info(f"开始清理空文件夹！")
+                #print('开始清理空文件夹！')
                 __clean_dir(strm_path)
-        print('无效strm处理完毕！')
+        logger.info(f"无效strm处理完毕！")
+        #print('无效strm处理完毕！')
 
     def __is_empty_dir(directory):
         # 获取目录中的所有文件和文件夹
@@ -157,6 +163,7 @@ class CleanStrm(_PluginBase):
                 # 检查文件扩展名是否为媒体文件类型
                 if full_path.endswith(".strm"):
                     return False
+                    logger.info(f"{full_path}")
         # 如果所有条目都不是媒体文件或为空，返回True
         return True
 
@@ -167,8 +174,10 @@ class CleanStrm(_PluginBase):
                 full_dir_path = os.path.join(root, dir)
                 if  __is_empty_dir(full_dir_path):
                     os.rmdir(full_dir_path)
-                    print(f"Deleted: {full_dir_path}")
-        print('清理空文件夹完成！')
+                    logger.info(f"Deleted: {full_dir_path}")
+                    #print(f"Deleted: {full_dir_path}")
+        #print('清理空文件夹完成！')
+        logger.info(f"清理空文件夹完成！")
 
     def __update_config(self):
         """
