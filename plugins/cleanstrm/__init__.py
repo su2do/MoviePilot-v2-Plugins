@@ -143,9 +143,9 @@ class CleanStrm(_PluginBase):
                                 logger.info(f"{strm_path} 有效")
                                 #print(strm_path+'有效')
             if self._cleandir:
-                logger.info(f"开始清理空文件夹！")
+                logger.info(f"开始清理文件夹 {strm_path} ！")
                 #print('开始清理空文件夹！')
-                __clean_dir(strm_path)
+                self.__clean_dir(strm_path)
         logger.info(f"无效strm处理完毕！")
         #print('无效strm处理完毕！')
 
@@ -331,7 +331,7 @@ class CleanStrm(_PluginBase):
         ], {
             "enable": False,
             "onlyonce": False,
-            "cleandir": True,
+            "cleandir": False,
             "cron": "30 4 * * *",
             "cleanuser": ""
         }
