@@ -117,44 +117,32 @@ class CleanStrm(_PluginBase):
                 continue
             for root,dirs,files in os.walk(strm_path):
                 for name in files:
-                    #print name
                     if name.endswith(".strm"):
-                        #print root,dirs,name
                         filename=root+"/"+name
                         f=open(filename,"r")
-                        #filecontent=""
                         media=f.read()
-                        #print(line)
                         meida_path=urllib.parse.unquote(media)
                         if suffix == None:
                             if not os.path.exists(replace_to+meida_path.replace(replace_from,'')):# 检查文件是否存在
                                 logger.info(f"{meida_path} 已删除")
-                                #print(strm_path+'已删除')
                                 os.remove(filename)  # 删除文件
                             else:
                                 logger.info(f"{meida_path} 有效")
-                                #print(strm_path+'有效')
                         else:
                             if not os.path.exists(replace_to+meida_path.replace(replace_from,'')[:-3]+suffix):# 检查文件是否存在
                                 logger.info(f"{meida_path} 已删除")
-                                #print(strm_path+'已删除')
                                 os.remove(filename)  # 删除文件
                             else:
                                 logger.info(f"{meida_path} 有效")
-                                #print(strm_path+'有效')
             if self._cleandir:
-                logger.info(f"开始清理文件夹 {strm_path} ！")
-                #print('开始清理空文件夹！')
                 self.__clean_dir(strm_path)
         logger.info(f"无效strm处理完毕！")
-        #print('无效strm处理完毕！')
 
-    def __is_empty_dir(directory):
-        # 获取目录中的所有文件和文件夹
-        entries = os.listdir(directory)
+    def __is_empty_dir(full_dir_path):
+        entries = os.listdir(full_dir_path)
         # 检查每个条目是否为媒体文件或文件夹
         for entry in entries:
-            full_path = os.path.join(directory, entry)
+            full_path = os.path.join(full_dir_path, entry)
             if os.path.isdir(full_path):
                 # 如果目录不为空或者包含非strm文件，返回False
                 if not __is_empty_dir(full_path):
@@ -168,18 +156,16 @@ class CleanStrm(_PluginBase):
         return True
 
     def __clean_dir(directory):
-        strm_path = directory
-        for root,dirs,files in os.walk(strm_path, topdown=False):
+        logger.info(f"开始清理文件夹 {directory} ！")
+        for root,dirs,files in os.walk(directory, topdown=False):
             for dir in dirs:
                 full_dir_path = os.path.join(root, dir)
                 logger.info(f"开始检查 {full_dir_path}")
                 if  __is_empty_dir(full_dir_path):
                     os.rmdir(full_dir_path)
                     logger.info(f"Deleted: {full_dir_path}")
-                    #print(f"Deleted: {full_dir_path}")
                 else:
                     logger.info(f"{full_dir_path} 非空")
-        #print('清理空文件夹完成！')
         logger.info(f"清理空文件夹完成！")
 
     def __update_config(self):
