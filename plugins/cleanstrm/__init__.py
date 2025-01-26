@@ -166,6 +166,7 @@ class CleanStrm(_PluginBase):
                 else:
                     logger.info(f"{full_path} 非strm文件")
             # 如果所有条目都不是媒体文件或为空，返回True
+            logger.info(f"{full_dir_path} 无strm文件")
             return True
 
     def __clean_dir(self, directory):
