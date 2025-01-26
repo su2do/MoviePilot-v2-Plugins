@@ -150,11 +150,12 @@ class CleanStrm(_PluginBase):
                     # 如果目录不为空或者包含非strm文件，返回False
                     if not self.__is_empty_dir(full_path):
                         return False
+                elif full_path.endswith(".strm"):# 检查文件扩展名是否为媒体文件类型
+                    return False
+                    logger.info(f"{full_path}")
                 else:
-                    # 检查文件扩展名是否为媒体文件类型
-                    if full_path.endswith(".strm"):
-                        return False
-                        logger.info(f"{full_path}")
+                    logger.info(f"{full_path} 非strm文件")
+                    return True
             # 如果所有条目都不是媒体文件或为空，返回True
             return True
 
