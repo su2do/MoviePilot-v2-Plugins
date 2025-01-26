@@ -139,7 +139,8 @@ class CleanStrm(_PluginBase):
                 self.__clean_dir(strm_path)
         logger.info(f"无效strm处理完毕！")
  
-    def delete_folder(path):
+    def delete_folder(self,path):
+        logger.info(f"开始删除 {path}")    
         try:
             shutil.rmtree(path)
         except NotADirectoryError:
@@ -176,7 +177,7 @@ class CleanStrm(_PluginBase):
                 full_dir_path = os.path.join(root, dir)
                 logger.info(f"开始检查 {full_dir_path}")
                 if  self.__is_empty_dir(full_dir_path):
-                    delete_folder(full_dir_path)
+                    self,delete_folder(full_dir_path)
                     logger.info(f"Deleted: {full_dir_path}")
                 else:
                     logger.info(f"{full_dir_path} 非空")
