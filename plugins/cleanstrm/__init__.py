@@ -154,7 +154,6 @@ class CleanStrm(_PluginBase):
         for root,dirs,files in os.walk(full_dir_path, topdown=False):
         # 检查每个条目是否为媒体文件或文件夹
             for file in files:
-                logger.info(f"判断 {file} 是否为strm文件")
                 full_path = os.path.join(root, file)
                 if os.path.isdir(full_path):
                     # 如果目录不为空或者包含非strm文件，返回False
@@ -176,8 +175,8 @@ class CleanStrm(_PluginBase):
                 full_dir_path = os.path.join(root, dir)
                 logger.info(f"开始检查 {full_dir_path}")
                 if  self.__is_empty_dir(full_dir_path):
+                    self.delete_folder(full_dir_path)
                     logger.info(f"Deleted: {full_dir_path}")
-                    self,delete_folder(full_dir_path)
                 else:
                     logger.info(f"{full_dir_path} 非空")
         logger.info(f"清理空文件夹完成！")
