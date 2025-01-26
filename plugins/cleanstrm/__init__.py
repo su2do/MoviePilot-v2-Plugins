@@ -3,6 +3,7 @@ import random
 import re
 import time
 import urllib
+import shutil
 from os import path
 
 from collections import defaultdict
@@ -137,6 +138,16 @@ class CleanStrm(_PluginBase):
             if self._cleandir:
                 self.__clean_dir(strm_path)
         logger.info(f"无效strm处理完毕！")
+ 
+    def delete_folder(path):
+        try:
+            shutil.rmtree(path)
+        except NotADirectoryError:
+            print("Invalid folder path")
+        except FileNotFoundError:
+            print("Folder not found")
+ 
+
 
     def __is_empty_dir(self,full_dir_path):
         logger.info(f"遍历 {full_dir_path} 文件")
@@ -155,7 +166,6 @@ class CleanStrm(_PluginBase):
                     logger.info(f"{full_path}")
                 else:
                     logger.info(f"{full_path} 非strm文件")
-                    return True
             # 如果所有条目都不是媒体文件或为空，返回True
             return True
 
@@ -166,7 +176,7 @@ class CleanStrm(_PluginBase):
                 full_dir_path = os.path.join(root, dir)
                 logger.info(f"开始检查 {full_dir_path}")
                 if  self.__is_empty_dir(full_dir_path):
-                    os.rmdir(full_dir_path)
+                    delete_folder(full_dir_path)
                     logger.info(f"Deleted: {full_dir_path}")
                 else:
                     logger.info(f"{full_dir_path} 非空")
