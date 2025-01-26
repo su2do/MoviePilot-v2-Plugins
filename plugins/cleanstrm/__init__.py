@@ -155,7 +155,7 @@ class CleanStrm(_PluginBase):
         # 如果所有条目都不是媒体文件或为空，返回True
         return True
 
-    def __clean_dir(directory):
+    def __clean_dir(self, directory):
         logger.info(f"开始清理文件夹 {directory} ！")
         for root,dirs,files in os.walk(directory, topdown=False):
             for dir in dirs:
