@@ -116,6 +116,8 @@ class CleanStrm(_PluginBase):
             else:
                 logger.error(f"{cleanconfig} 格式错误")
                 continue
+            logger.info(f"\n======== ▷{cleanconfig} ◁ ========")
+            logger.info(f"开始清除 {strm_path} 失效strm")
             for root,dirs,files in os.walk(strm_path):
                 for name in files:
                     if name.endswith(".strm"):
@@ -137,10 +139,9 @@ class CleanStrm(_PluginBase):
                                 logger.info(f"{meida_path} 有效")
             if self._cleandir:
                 self.__clean_dir(strm_path)
-        logger.info(f"无效strm处理完毕！")
+        logger.info(f"失效strm处理完毕！")
  
-    def delete_folder(self,path):
-        logger.info(f"开始删除 {path}")    
+    def delete_folder(self,path): 
         try:
             shutil.rmtree(path)
         except NotADirectoryError:
@@ -149,7 +150,6 @@ class CleanStrm(_PluginBase):
             print("Folder not found")
 
     def __is_empty_dir(self,full_dir_path):
-        logger.info(f"遍历 {full_dir_path} 文件")
         #entries = os.listdir(full_dir_path)
         for root,dirs,files in os.walk(full_dir_path, topdown=False):
         # 检查每个条目是否为媒体文件或文件夹
@@ -161,7 +161,6 @@ class CleanStrm(_PluginBase):
                         return False
                 elif full_path.endswith(".strm"):# 检查文件扩展名是否为媒体文件类型
                     return False
-                    logger.info(f"{full_path}")
                 else:
                     logger.info(f"{full_path} 非strm文件")
             # 如果所有条目都不是媒体文件或为空，返回True
@@ -173,10 +172,10 @@ class CleanStrm(_PluginBase):
         for root,dirs,files in os.walk(directory, topdown=False):
             for dir in dirs:
                 full_dir_path = os.path.join(root, dir)
-                logger.info(f"开始检查 {full_dir_path}")
+                logger.info(f"检查 {full_dir_path}")
                 if  self.__is_empty_dir(full_dir_path):
                     self.delete_folder(full_dir_path)
-                    logger.info(f"Deleted: {full_dir_path}")
+                    logger.info(f"删除： {full_dir_path}")
                 else:
                     logger.info(f"{full_dir_path} 非空")
         logger.info(f"清理空文件夹完成！")
