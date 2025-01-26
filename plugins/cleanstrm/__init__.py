@@ -117,7 +117,7 @@ class CleanStrm(_PluginBase):
                 logger.error(f"{cleanconfig} 格式错误")
                 continue
             logger.info(f"\n======== ▷{cleanconfig} ◁ ========")
-            logger.info(f"开始清除 {strm_path} 失效strm")
+            logger.info(f"开始清除失效strm {strm_path} ")
             for root,dirs,files in os.walk(strm_path):
                 for name in files:
                     if name.endswith(".strm"):
@@ -127,16 +127,16 @@ class CleanStrm(_PluginBase):
                         meida_path=urllib.parse.unquote(media)
                         if suffix == None:
                             if not os.path.exists(replace_to+meida_path.replace(replace_from,'')):# 检查文件是否存在
-                                logger.info(f"{meida_path} 已删除")
+                                logger.info(f"{filename} 已删除")
                                 os.remove(filename)  # 删除文件
                             else:
-                                logger.info(f"{meida_path} 有效")
+                                logger.info(f"{filename} 有效")
                         else:
                             if not os.path.exists(replace_to+meida_path.replace(replace_from,'')[:-3]+suffix):# 检查文件是否存在
-                                logger.info(f"{meida_path} 已删除")
+                                logger.info(f"{filename} 已删除")
                                 os.remove(filename)  # 删除文件
                             else:
-                                logger.info(f"{meida_path} 有效")
+                                logger.info(f"{filename} 有效")
             if self._cleandir:
                 self.__clean_dir(strm_path)
         logger.info(f"失效strm处理完毕！")
@@ -172,10 +172,10 @@ class CleanStrm(_PluginBase):
         for root,dirs,files in os.walk(directory, topdown=False):
             for dir in dirs:
                 full_dir_path = os.path.join(root, dir)
-                logger.info(f"检查 {full_dir_path}")
+                #logger.info(f"检查 {full_dir_path}")
                 if  self.__is_empty_dir(full_dir_path):
                     self.delete_folder(full_dir_path)
-                    logger.info(f"删除： {full_dir_path}")
+                    logger.info(f"删除空目录： {full_dir_path}")
                 else:
                     logger.info(f"{full_dir_path} 非空")
         logger.info(f"清理空文件夹完成！")
