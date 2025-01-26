@@ -125,22 +125,22 @@ class CleanStrm(_PluginBase):
                         #filecontent=""
                         media=f.read()
                         #print(line)
-                        strm_path=urllib.parse.unquote(media)
+                        meida_path=urllib.parse.unquote(media)
                         if suffix == None:
-                            if not os.path.exists(replace_to+strm_path.replace(replace_from,'')):# 检查文件是否存在
-                                logger.info(f"{strm_path} 已删除")
+                            if not os.path.exists(replace_to+meida_path.replace(replace_from,'')):# 检查文件是否存在
+                                logger.info(f"{meida_path} 已删除")
                                 #print(strm_path+'已删除')
                                 os.remove(filename)  # 删除文件
                             else:
-                                logger.info(f"{strm_path} 有效")
+                                logger.info(f"{meida_path} 有效")
                                 #print(strm_path+'有效')
                         else:
-                            if not os.path.exists(replace_to+strm_path.replace(replace_from,'')[:-3]+suffix):# 检查文件是否存在
-                                logger.info(f"{strm_path} 已删除")
+                            if not os.path.exists(replace_to+meida_path.replace(replace_from,'')[:-3]+suffix):# 检查文件是否存在
+                                logger.info(f"{meida_path} 已删除")
                                 #print(strm_path+'已删除')
                                 os.remove(filename)  # 删除文件
                             else:
-                                logger.info(f"{strm_path} 有效")
+                                logger.info(f"{meida_path} 有效")
                                 #print(strm_path+'有效')
             if self._cleandir:
                 logger.info(f"开始清理文件夹 {strm_path} ！")
