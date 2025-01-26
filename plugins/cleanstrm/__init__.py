@@ -172,10 +172,13 @@ class CleanStrm(_PluginBase):
         for root,dirs,files in os.walk(strm_path, topdown=False):
             for dir in dirs:
                 full_dir_path = os.path.join(root, dir)
+                logger.info(f"开始检查 {full_dir_path}")
                 if  __is_empty_dir(full_dir_path):
                     os.rmdir(full_dir_path)
                     logger.info(f"Deleted: {full_dir_path}")
                     #print(f"Deleted: {full_dir_path}")
+                else:
+                    logger.info(f"{full_dir_path} 非空")
         #print('清理空文件夹完成！')
         logger.info(f"清理空文件夹完成！")
 
@@ -328,7 +331,7 @@ class CleanStrm(_PluginBase):
         ], {
             "enable": False,
             "onlyonce": False,
-            "cleandir": False,
+            "cleandir": True,
             "cron": "30 4 * * *",
             "cleanuser": ""
         }
