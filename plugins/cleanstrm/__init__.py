@@ -139,21 +139,24 @@ class CleanStrm(_PluginBase):
         logger.info(f"无效strm处理完毕！")
 
     def __is_empty_dir(self,full_dir_path):
-        entries = os.listdir(full_dir_path)
+        logger.info(f"遍历 {full_dir_path} 文件")
+        #entries = os.listdir(full_dir_path)
+        for root,dirs,files in os.walk(full_dir_path, topdown=False):
         # 检查每个条目是否为媒体文件或文件夹
-        for entry in entries:
-            full_path = os.path.join(full_dir_path, entry)
-            if os.path.isdir(full_path):
-                # 如果目录不为空或者包含非strm文件，返回False
-                if not self.__is_empty_dir(full_path):
-                    return False
-            else:
-                # 检查文件扩展名是否为媒体文件类型
-                if full_path.endswith(".strm"):
-                    return False
-                    logger.info(f"{full_path}")
-        # 如果所有条目都不是媒体文件或为空，返回True
-        return True
+            for file in files:
+                logger.info(f"判断 {file} 是否为strm文件")
+                full_path = os.path.join(root, file)
+                if os.path.isdir(full_path):
+                    # 如果目录不为空或者包含非strm文件，返回False
+                    if not self.__is_empty_dir(full_path):
+                        return False
+                else:
+                    # 检查文件扩展名是否为媒体文件类型
+                    if full_path.endswith(".strm"):
+                        return False
+                        logger.info(f"{full_path}")
+            # 如果所有条目都不是媒体文件或为空，返回True
+            return True
 
     def __clean_dir(self, directory):
         logger.info(f"开始清理文件夹 {directory} ！")
