@@ -147,8 +147,6 @@ class CleanStrm(_PluginBase):
             print("Invalid folder path")
         except FileNotFoundError:
             print("Folder not found")
- 
-
 
     def __is_empty_dir(self,full_dir_path):
         logger.info(f"遍历 {full_dir_path} 文件")
@@ -177,8 +175,8 @@ class CleanStrm(_PluginBase):
                 full_dir_path = os.path.join(root, dir)
                 logger.info(f"开始检查 {full_dir_path}")
                 if  self.__is_empty_dir(full_dir_path):
-                    self,delete_folder(full_dir_path)
                     logger.info(f"Deleted: {full_dir_path}")
+                    self,delete_folder(full_dir_path)
                 else:
                     logger.info(f"{full_dir_path} 非空")
         logger.info(f"清理空文件夹完成！")
