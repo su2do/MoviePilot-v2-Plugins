@@ -127,14 +127,13 @@ class CleanStrm(_PluginBase):
                         meida_path=urllib.parse.unquote(media)
                         if suffix == None:
                             if not os.path.exists(meida_path.replace(replace_from,replace_to)):# 检查文件是否存在
-                                logger.info(f"{filename} 已删除")
+                                logger.info(f"已删除 {filename} : {meida_path}")
                                 os.remove(filename)  # 删除文件
                             else:
                                 logger.info(f"{filename} 有效")
                         else:
-                            #if not os.path.exists(replace_to+meida_path.replace(replace_from,'')[:-3]+suffix):# 检查文件是否存在
-                            if not os.path.exists(re.sub(r'\.[^.]*$', suffix, meida_path.replace(replace_from,replace_to))):# 检查文件是否存在
-                                logger.info(f"{filename} 已删除")
+                            if not os.path.exists(re.sub(r'\.[^.]*$', '.' + suffix, meida_path.replace(replace_from,replace_to))):# 检查文件是否存在
+                                logger.info(f"已删除 {filename} : {meida_path}")
                                 os.remove(filename)  # 删除文件
                             else:
                                 logger.info(f"{filename} 有效")
@@ -144,11 +143,11 @@ class CleanStrm(_PluginBase):
  
     def delete_folder(self,path): 
         try:
-            shutil.rmtree(path)
+            shutil.rmtree(path, ignore_errors=True)
         except NotADirectoryError:
-            print("Invalid folder path")
+            logger.error("Invalid folder path")
         except FileNotFoundError:
-            print("Folder not found")
+            logger.error("Folder not found")
 
     def __is_empty_dir(self,full_dir_path):
         #entries = os.listdir(full_dir_path)
@@ -171,14 +170,21 @@ class CleanStrm(_PluginBase):
     def __clean_dir(self, directory):
         logger.info(f"开始清理文件夹 {directory} ！")
         for root,dirs,files in os.walk(directory, topdown=False):
-            for dir in dirs:
-                full_dir_path = os.path.join(root, dir)
-                #logger.info(f"检查 {full_dir_path}")
-                if  self.__is_empty_dir(full_dir_path):
-                    self.delete_folder(full_dir_path)
-                    logger.info(f"删除空目录： {full_dir_path}")
+            if not dirs:
+                if  self.__is_empty_dir(root):
+                    self.delete_folder(root)
+                    logger.info(f"删除空目录： {root}")
                 else:
-                    logger.info(f"{full_dir_path} 非空")
+                    logger.info(f"{root} 非空")
+            else:
+                for dir in dirs:
+                    full_dir_path = os.path.join(root, dir)
+                    #logger.info(f"检查 {full_dir_path}")
+                    if  self.__is_empty_dir(full_dir_path):
+                        self.delete_folder(full_dir_path)
+                        logger.info(f"删除空目录： {full_dir_path}")
+                    else:
+                        logger.info(f"{full_dir_path} 非空")
         logger.info(f"清理空文件夹完成！")
 
     def __update_config(self):
