@@ -126,13 +126,14 @@ class CleanStrm(_PluginBase):
                         media=f.read()
                         meida_path=urllib.parse.unquote(media)
                         if suffix == None:
-                            if not os.path.exists(replace_to+meida_path.replace(replace_from,'')):# 检查文件是否存在
+                            if not os.path.exists(meida_path.replace(replace_from,replace_to)):# 检查文件是否存在
                                 logger.info(f"{filename} 已删除")
                                 os.remove(filename)  # 删除文件
                             else:
                                 logger.info(f"{filename} 有效")
                         else:
-                            if not os.path.exists(replace_to+meida_path.replace(replace_from,'')[:-3]+suffix):# 检查文件是否存在
+                            #if not os.path.exists(replace_to+meida_path.replace(replace_from,'')[:-3]+suffix):# 检查文件是否存在
+                            if not os.path.exists(re.sub(r'\.[^.]*$', suffix, meida_path.replace(replace_from,replace_to))):# 检查文件是否存在
                                 logger.info(f"{filename} 已删除")
                                 os.remove(filename)  # 删除文件
                             else:
