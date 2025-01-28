@@ -249,7 +249,7 @@ class CleanStrm(_PluginBase):
                                     {
                                         'component': 'VSwitch',
                                         'props': {
-                                            'model': 'enable',
+                                            'model': 'enabled',
                                             'label': '启用插件',
                                         }
                                     }
