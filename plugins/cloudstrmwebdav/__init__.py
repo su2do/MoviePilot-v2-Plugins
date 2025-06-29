@@ -29,7 +29,7 @@ class CloudStrmwebdav(_PluginBase):
     # 插件图标
     plugin_icon = "https://raw.githubusercontent.com/thsrite/MoviePilot-Plugins/main/icons/create.png"
     # 插件版本
-    plugin_version = "4.4.1.4"
+    plugin_version = "4.4.1.5"
     # 插件作者
     plugin_author = "su2do"
     # 作者主页
@@ -52,10 +52,8 @@ class CloudStrmwebdav(_PluginBase):
     _alist_webdav = False
     _dav_user = None
     _dav_pass = None
-    _video_formats = []
-    _video_format = None
-    _dw_formats = []
-    _dw_format = None
+    _video_formats = None
+    _dw_formats = None
     _https = False
     _observer = []
     # _video_formats = ('.mp4', '.avi', '.rmvb', '.wmv', '.mov', '.mkv', '.flv', '.ts', '.webm', '.iso', '.mpg', '.m2ts', '.mpeg', '.3gp', '.asf', '.m4v', '.tp', '.f4v', '.m4a', '.mp3')
@@ -92,10 +90,8 @@ class CloudStrmwebdav(_PluginBase):
             self._alist_webdav = config.get("alist_webdav")
             self._dav_user = config.get("dav_user")
             self._dav_pass = config.get("dav_pass")
-            self._video_format = config.get("video_formats")
-            self._video_formats = self.add_dot_prefix(config.get("video_formats"))
-            self._dw_format = config.get("dw_formats")
-            self._dw_formats = self.add_dot_prefix(config.get("dw_formats"))
+            self._video_formats = self.format_extensions_with_parentheses(config.get("video_formats"))
+            self._dw_formats = self.format_extensions_with_parentheses(config.get("dw_formats"))
 
         # 停止现有任务
         self.stop_service()
@@ -364,15 +360,29 @@ class CloudStrmwebdav(_PluginBase):
             self.__sava_json()
         else:
             logger.warning(f"未获取到文件列表")
-    def add_dot_prefix(self, s):
+
+    def format_extensions_with_parentheses(self,s):
         """
-        将逗号分隔的字符串转换为具有点前缀的列表
+        将逗号分隔的文件扩展名格式化为带点、单引号并用小括号包裹的字符串
         @param s: 原始字符串，如 "mp4,rmvb,avi"
-        @return: 带点前缀的列表，如 ['.mp4', '.rmvb', '.avi']
+        @return: 格式化后的字符串，如 ('.mp4', '.avi', '.rmvb')
         """
         if not s:
-            return []
-        return ['.' + x for x in s.split(',')]
+            return '()'
+            
+        # 分割字符串并过滤空白项
+        extensions = [x.strip() for x in s.split(',') if x.strip()]
+        
+        # 增加点前缀并用单引号包裹
+        formatted_extensions = [f"'.{x}'" for x in extensions]
+        
+        # 用逗号和空格连接
+        joined_extensions = ', '.join(formatted_extensions)
+        
+        # 包裹小括号
+        result = f"({joined_extensions})"
+        
+        return result
 
     def _webdav_list_files(self, source_dir, dav_user, dav_pass):
         # 创建WebDAV客户端
@@ -575,8 +585,8 @@ class CloudStrmwebdav(_PluginBase):
             "alist_webdav": self._alist_webdav,
             "dav_user": self._dav_user,
             "dav_pass": self._dav_pass,
-            "video_formats": self._video_format,
-            "dw_formats": self._dw_format
+            "video_formats": self._video_formats,
+            "dw_formats": self._dw_formats
         })
 
     def get_state(self) -> bool:
