@@ -474,7 +474,7 @@ class CloudStrmwebdav(_PluginBase):
 
                         # 媒体文件创建.strm文件
                         #if Path(dest_file).suffix.lower() in settings.RMT_MEDIAEXT:
-                        if Path(dest_file).lower().endswith(self._video_formats):
+                        if dest_file.lower().endswith(self._video_formats):
                             # 创建.strm文件
                             self.__create_strm_file(scheme="https" if self._https else "http",
                                                     dest_file=dest_file,
@@ -485,12 +485,12 @@ class CloudStrmwebdav(_PluginBase):
                                                     cloud_path=cloud_path,
                                                     cloud_url=cloud_url)
                         else:
-                            if self._copy_files and not self._alist_webdav and Path(dest_file).lower().endswith(self._dw_formats):
+                            if self._copy_files and not self._alist_webdav and dest_file.lower().endswith(self._dw_formats):
                                 # 其他nfo、jpg等复制文件
                                 shutil.copy2(source_file, dest_file)
                                 logger.info(f"复制其他文件 {source_file} 到 {dest_file}")
                             else:
-                                if self._copy_files and self._alist_webdav and Path(dest_file).lower().endswith(self._dw_formats):
+                                if self._copy_files and self._alist_webdav and dest_file.lower().endswith(self._dw_formats):
                                     p=1
                                     while p<10:
                                             try:
