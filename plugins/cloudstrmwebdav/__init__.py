@@ -29,7 +29,7 @@ class CloudStrmwebdav(_PluginBase):
     # 插件图标
     plugin_icon = "https://raw.githubusercontent.com/thsrite/MoviePilot-Plugins/main/icons/create.png"
     # 插件版本
-    plugin_version = "4.4.1.6"
+    plugin_version = "4.4.1.7"
     # 插件作者
     plugin_author = "su2do"
     # 作者主页
@@ -485,12 +485,12 @@ class CloudStrmwebdav(_PluginBase):
                                                     cloud_path=cloud_path,
                                                     cloud_url=cloud_url)
                         else:
-                            if self._copy_files and not self._alist_webdav and Path(dest_file).suffix.lower().endswith(self._dw_formats):
+                            if self._copy_files and not self._alist_webdav and Path(dest_file).lower().endswith(self._dw_formats):
                                 # 其他nfo、jpg等复制文件
                                 shutil.copy2(source_file, dest_file)
                                 logger.info(f"复制其他文件 {source_file} 到 {dest_file}")
                             else:
-                                if self._copy_files and self._alist_webdav and Path(dest_file).suffix.lower().endswith(self._dw_formats):
+                                if self._copy_files and self._alist_webdav and Path(dest_file).lower().endswith(self._dw_formats):
                                     p=1
                                     while p<10:
                                             try:
