@@ -1,4 +1,3 @@
-
 import json
 import os
 import shutil
@@ -55,7 +54,7 @@ class CloudStrmwebdav(_PluginBase):
     _dav_pass = None
     _https = False
     _observer = []
-    _video_formats = ('.mp4', '.avi', '.rmvb', '.wmv', '.mov', '.mkv', '.flv', '.ts', '.webm', '.iso', '.mpg', '.m2ts')
+    _video_formats = ('.mp4', '.avi', '.rmvb', '.wmv', '.mov', '.mkv', '.flv', '.ts', '.webm', '.iso', '.mpg', '.m2ts', '.mpeg', '.3gp', '.asf', '.m4v', '.tp', '.f4v', '.m4a', '.mp3')
     __cloud_files_json = "cloud_files.json"
 
     _dirconf = {}
