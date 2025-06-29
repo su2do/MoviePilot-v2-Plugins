@@ -91,8 +91,8 @@ class CloudStrmwebdav(_PluginBase):
             self._alist_webdav = config.get("alist_webdav")
             self._dav_user = config.get("dav_user")
             self._dav_pass = config.get("dav_pass")
-            self._video_formats = ['.' + x for x in config.get("video_formats").split(',')]
-            self._dw_formats = ['.' + x for x in config.get("dw_formats").split(',')]
+            self._video_formats = self.add_dot_prefix(config.get("video_formats"))
+            self._dw_formats = self.add_dot_prefix(config.get("dw_formats"))
 
         # 停止现有任务
         self.stop_service()
@@ -361,6 +361,15 @@ class CloudStrmwebdav(_PluginBase):
             self.__sava_json()
         else:
             logger.warning(f"未获取到文件列表")
+    def add_dot_prefix(self, s):
+        """
+        将逗号分隔的字符串转换为具有点前缀的列表
+        @param s: 原始字符串，如 "mp4,rmvb,avi"
+        @return: 带点前缀的列表，如 ['.mp4', '.rmvb', '.avi']
+        """
+        if not s:
+            return []
+        return ['.' + x for x in s.split(',')]
 
     def _webdav_list_files(self, source_dir, dav_user, dav_pass):
         # 创建WebDAV客户端
