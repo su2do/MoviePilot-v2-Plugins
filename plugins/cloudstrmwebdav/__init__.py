@@ -93,7 +93,7 @@ class CloudStrmwebdav(_PluginBase):
             self._dav_user = config.get("dav_user")
             self._dav_pass = config.get("dav_pass")
             self._video_format = config.get("video_formats")
-            self._dw_format = config.get("video_formats")
+            self._dw_format = config.get("dw_formats")
             self._video_formats = self.format_extensions_with_parentheses(config.get("video_formats"))
             self._dw_formats = self.format_extensions_with_parentheses(config.get("dw_formats"))
 
@@ -342,7 +342,7 @@ class CloudStrmwebdav(_PluginBase):
                             or source_file.find("/#recycle") != -1
                             or source_file.find("/.") != -1
                             or source_file.find("/@eaDir") != -1):
-                        logger.info(f"{source_file} 是回收站或隐藏的文件，跳过处理")
+                        # logger.info(f"{source_file} 是回收站或隐藏的文件，跳过处理")
                         continue
                     # 不复制非媒体文件时直接过滤掉非媒体文件
                     if not self._copy_files and not source_file.lower().endswith(self._video_formats):
@@ -474,7 +474,7 @@ class CloudStrmwebdav(_PluginBase):
 
                         # 媒体文件创建.strm文件
                         #if Path(dest_file).suffix.lower() in settings.RMT_MEDIAEXT:
-                        if Path(dest_file).suffix.lower().endswith(self._video_formats):
+                        if Path(dest_file).lower().endswith(self._video_formats):
                             # 创建.strm文件
                             self.__create_strm_file(scheme="https" if self._https else "http",
                                                     dest_file=dest_file,
