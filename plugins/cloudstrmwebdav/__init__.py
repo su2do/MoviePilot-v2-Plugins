@@ -30,7 +30,7 @@ class CloudStrmwebdav(_PluginBase):
     # 插件图标
     plugin_icon = "https://raw.githubusercontent.com/thsrite/MoviePilot-Plugins/main/icons/create.png"
     # 插件版本
-    plugin_version = "4.4.1"
+    plugin_version = "4.4.1.3"
     # 插件作者
     plugin_author = "su2do"
     # 作者主页
@@ -53,8 +53,8 @@ class CloudStrmwebdav(_PluginBase):
     _alist_webdav = False
     _dav_user = None
     _dav_pass = None
-	_video_formats = []
-	_dw_formats = []
+    _video_formats = []
+    _dw_formats = []
     _https = False
     _observer = []
     # _video_formats = ('.mp4', '.avi', '.rmvb', '.wmv', '.mov', '.mkv', '.flv', '.ts', '.webm', '.iso', '.mpg', '.m2ts', '.mpeg', '.3gp', '.asf', '.m4v', '.tp', '.f4v', '.m4a', '.mp3')
