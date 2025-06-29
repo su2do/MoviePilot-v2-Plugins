@@ -52,7 +52,9 @@ class CloudStrmwebdav(_PluginBase):
     _alist_webdav = False
     _dav_user = None
     _dav_pass = None
+    _video_format = None
     _video_formats = None
+    _dw_format = None
     _dw_formats = None
     _https = False
     _observer = []
@@ -90,6 +92,8 @@ class CloudStrmwebdav(_PluginBase):
             self._alist_webdav = config.get("alist_webdav")
             self._dav_user = config.get("dav_user")
             self._dav_pass = config.get("dav_pass")
+            self._video_format = config.get("video_formats")
+            self._dw_format = config.get("video_formats")
             self._video_formats = self.format_extensions_with_parentheses(config.get("video_formats"))
             self._dw_formats = self.format_extensions_with_parentheses(config.get("dw_formats"))
 
@@ -585,8 +589,8 @@ class CloudStrmwebdav(_PluginBase):
             "alist_webdav": self._alist_webdav,
             "dav_user": self._dav_user,
             "dav_pass": self._dav_pass,
-            "video_formats": self._video_formats,
-            "dw_formats": self._dw_formats
+            "video_formats": self._video_format,
+            "dw_formats": self._dw_format
         })
 
     def get_state(self) -> bool:
