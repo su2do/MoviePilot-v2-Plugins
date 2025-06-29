@@ -91,7 +91,7 @@ class CloudStrmwebdav(_PluginBase):
             self._alist_webdav = config.get("alist_webdav")
             self._dav_user = config.get("dav_user")
             self._dav_pass = config.get("dav_pass")
-			self._video_formats = ['.' + x for x in config.get("video_formats").split(',')]
+            self._video_formats = ['.' + x for x in config.get("video_formats").split(',')]
             self._dw_formats = ['.' + x for x in config.get("dw_formats").split(',')]
 
         # 停止现有任务
@@ -448,7 +448,7 @@ class CloudStrmwebdav(_PluginBase):
 
                         # 媒体文件创建.strm文件
                         #if Path(dest_file).suffix.lower() in settings.RMT_MEDIAEXT:
-						if Path(dest_file).suffix.lower().endswith(self._video_formats):
+                        if Path(dest_file).suffix.lower().endswith(self._video_formats):
                             # 创建.strm文件
                             self.__create_strm_file(scheme="https" if self._https else "http",
                                                     dest_file=dest_file,
@@ -563,7 +563,7 @@ class CloudStrmwebdav(_PluginBase):
             "alist_webdav": self._alist_webdav,
             "dav_user": self._dav_user,
             "dav_pass": self._dav_pass,
-			"video_formats": self._video_formats,
+            "video_formats": self._video_formats,
             "dw_formats": self._dw_formats
         })
 
@@ -824,7 +824,7 @@ class CloudStrmwebdav(_PluginBase):
                             }
                         ]
                     },
-					{
+                    {
                         'component': 'VRow',
                         'content': [
                             {
