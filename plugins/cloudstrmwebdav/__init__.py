@@ -53,7 +53,9 @@ class CloudStrmwebdav(_PluginBase):
     _dav_user = None
     _dav_pass = None
     _video_formats = []
+    _video_format = None
     _dw_formats = []
+    _dw_format = None
     _https = False
     _observer = []
     # _video_formats = ('.mp4', '.avi', '.rmvb', '.wmv', '.mov', '.mkv', '.flv', '.ts', '.webm', '.iso', '.mpg', '.m2ts', '.mpeg', '.3gp', '.asf', '.m4v', '.tp', '.f4v', '.m4a', '.mp3')
@@ -90,7 +92,9 @@ class CloudStrmwebdav(_PluginBase):
             self._alist_webdav = config.get("alist_webdav")
             self._dav_user = config.get("dav_user")
             self._dav_pass = config.get("dav_pass")
+            self._video_format = config.get("video_formats")
             self._video_formats = self.add_dot_prefix(config.get("video_formats"))
+            self._dw_format = config.get("dw_formats")
             self._dw_formats = self.add_dot_prefix(config.get("dw_formats"))
 
         # 停止现有任务
@@ -571,8 +575,8 @@ class CloudStrmwebdav(_PluginBase):
             "alist_webdav": self._alist_webdav,
             "dav_user": self._dav_user,
             "dav_pass": self._dav_pass,
-            "video_formats": self._video_formats,
-            "dw_formats": self._dw_formats
+            "video_formats": self._video_format,
+            "dw_formats": self._dw_format
         })
 
     def get_state(self) -> bool:
