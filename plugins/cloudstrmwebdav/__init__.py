@@ -53,9 +53,9 @@ class CloudStrmwebdav(_PluginBase):
     _dav_user = None
     _dav_pass = None
     _video_format = None
-    _video_formats = None
+    _video_formats = []
     _dw_format = None
-    _dw_formats = None
+    _dw_formats = []
     _https = False
     _observer = []
     # _video_formats = ('.mp4', '.avi', '.rmvb', '.wmv', '.mov', '.mkv', '.flv', '.ts', '.webm', '.iso', '.mpg', '.m2ts', '.mpeg', '.3gp', '.asf', '.m4v', '.tp', '.f4v', '.m4a', '.mp3')
@@ -94,8 +94,8 @@ class CloudStrmwebdav(_PluginBase):
             self._dav_pass = config.get("dav_pass")
             self._video_format = config.get("video_formats")
             self._dw_format = config.get("dw_formats")
-            self._video_formats = self.format_extensions_with_parentheses(config.get("video_formats"))
-            self._dw_formats = self.format_extensions_with_parentheses(config.get("dw_formats"))
+            self._video_formats = self.add_dot_prefix(config.get("video_formats"))
+            self._dw_formats = self.add_dot_prefix(config.get("dw_formats"))
 
         # 停止现有任务
         self.stop_service()
@@ -365,28 +365,15 @@ class CloudStrmwebdav(_PluginBase):
         else:
             logger.warning(f"未获取到文件列表")
 
-    def format_extensions_with_parentheses(self,s):
+    def add_dot_prefix(self,s):
         """
-        将逗号分隔的文件扩展名格式化为带点、单引号并用小括号包裹的字符串
+        将逗号分隔的字符串转换为具有点前缀的列表
         @param s: 原始字符串，如 "mp4,rmvb,avi"
-        @return: 格式化后的字符串，如 ('.mp4', '.avi', '.rmvb')
+        @return: 带点前缀的列表，如 ['.mp4', '.rmvb', '.avi']
         """
         if not s:
-            return '()'
-            
-        # 分割字符串并过滤空白项
-        extensions = [x.strip() for x in s.split(',') if x.strip()]
-        
-        # 增加点前缀并用单引号包裹
-        formatted_extensions = [f"'.{x}'" for x in extensions]
-        
-        # 用逗号和空格连接
-        joined_extensions = ', '.join(formatted_extensions)
-        
-        # 包裹小括号
-        result = f"({joined_extensions})"
-        
-        return result
+            return []
+        return ['.' + x for x in s.split(',')]
 
     def _webdav_list_files(self, source_dir, dav_user, dav_pass):
         # 创建WebDAV客户端
@@ -474,7 +461,7 @@ class CloudStrmwebdav(_PluginBase):
 
                         # 媒体文件创建.strm文件
                         #if Path(dest_file).suffix.lower() in settings.RMT_MEDIAEXT:
-                        if dest_file.lower().endswith(self._video_formats):
+                        if Path(dest_file).suffix.lower() in self._video_formats:
                             # 创建.strm文件
                             self.__create_strm_file(scheme="https" if self._https else "http",
                                                     dest_file=dest_file,
@@ -485,12 +472,12 @@ class CloudStrmwebdav(_PluginBase):
                                                     cloud_path=cloud_path,
                                                     cloud_url=cloud_url)
                         else:
-                            if self._copy_files and not self._alist_webdav and dest_file.lower().endswith(self._dw_formats):
+                            if self._copy_files and not self._alist_webdav and Path(dest_file).suffix.lower() in self._dw_formats:
                                 # 其他nfo、jpg等复制文件
                                 shutil.copy2(source_file, dest_file)
                                 logger.info(f"复制其他文件 {source_file} 到 {dest_file}")
                             else:
-                                if self._copy_files and self._alist_webdav and dest_file.lower().endswith(self._dw_formats):
+                                if self._copy_files and self._alist_webdav and Path(dest_file).suffix.lower() in self._dw_formats:
                                     p=1
                                     while p<10:
                                             try:
