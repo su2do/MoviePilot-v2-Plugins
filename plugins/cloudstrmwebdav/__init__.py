@@ -1,3 +1,4 @@
+
 import json
 import os
 import shutil
@@ -29,7 +30,7 @@ class CloudStrmwebdav(_PluginBase):
     # 插件图标
     plugin_icon = "https://raw.githubusercontent.com/thsrite/MoviePilot-Plugins/main/icons/create.png"
     # 插件版本
-    plugin_version = "4.4.1.2"
+    plugin_version = "4.4.1"
     # 插件作者
     plugin_author = "su2do"
     # 作者主页
@@ -52,9 +53,11 @@ class CloudStrmwebdav(_PluginBase):
     _alist_webdav = False
     _dav_user = None
     _dav_pass = None
+	_video_formats = []
+	_dw_formats = []
     _https = False
     _observer = []
-    _video_formats = ('.mp4', '.avi', '.rmvb', '.wmv', '.mov', '.mkv', '.flv', '.ts', '.webm', '.iso', '.mpg', '.m2ts', '.mpeg', '.3gp', '.asf', '.m4v', '.tp', '.f4v', '.m4a', '.mp3')
+    # _video_formats = ('.mp4', '.avi', '.rmvb', '.wmv', '.mov', '.mkv', '.flv', '.ts', '.webm', '.iso', '.mpg', '.m2ts', '.mpeg', '.3gp', '.asf', '.m4v', '.tp', '.f4v', '.m4a', '.mp3')
     __cloud_files_json = "cloud_files.json"
 
     _dirconf = {}
@@ -88,6 +91,8 @@ class CloudStrmwebdav(_PluginBase):
             self._alist_webdav = config.get("alist_webdav")
             self._dav_user = config.get("dav_user")
             self._dav_pass = config.get("dav_pass")
+			self._video_formats = ['.' + x for x in config.get("video_formats").split(',')]
+            self._dw_formats = ['.' + x for x in config.get("dw_formats").split(',')]
 
         # 停止现有任务
         self.stop_service()
@@ -441,8 +446,9 @@ class CloudStrmwebdav(_PluginBase):
                             logger.info(f"创建目标文件夹 {Path(dest_file).parent}")
                             os.makedirs(Path(dest_file).parent)
 
-                        # 视频文件创建.strm文件
-                        if Path(dest_file).suffix.lower() in settings.RMT_MEDIAEXT:
+                        # 媒体文件创建.strm文件
+                        #if Path(dest_file).suffix.lower() in settings.RMT_MEDIAEXT:
+						if Path(dest_file).suffix.lower().endswith(self._video_formats):
                             # 创建.strm文件
                             self.__create_strm_file(scheme="https" if self._https else "http",
                                                     dest_file=dest_file,
@@ -453,12 +459,12 @@ class CloudStrmwebdav(_PluginBase):
                                                     cloud_path=cloud_path,
                                                     cloud_url=cloud_url)
                         else:
-                            if self._copy_files and not self._alist_webdav:
+                            if self._copy_files and not self._alist_webdav and Path(dest_file).suffix.lower().endswith(self._dw_formats):
                                 # 其他nfo、jpg等复制文件
                                 shutil.copy2(source_file, dest_file)
                                 logger.info(f"复制其他文件 {source_file} 到 {dest_file}")
                             else:
-                                if self._copy_files and self._alist_webdav:
+                                if self._copy_files and self._alist_webdav and Path(dest_file).suffix.lower().endswith(self._dw_formats):
                                     p=1
                                     while p<10:
                                             try:
@@ -556,7 +562,9 @@ class CloudStrmwebdav(_PluginBase):
             "monitor_confs": self._monitor_confs,
             "alist_webdav": self._alist_webdav,
             "dav_user": self._dav_user,
-            "dav_pass": self._dav_pass
+            "dav_pass": self._dav_pass,
+			"video_formats": self._video_formats,
+            "dw_formats": self._dw_formats
         })
 
     def get_state(self) -> bool:
@@ -816,6 +824,45 @@ class CloudStrmwebdav(_PluginBase):
                             }
                         ]
                     },
+					{
+                        'component': 'VRow',
+                        'content': [
+                            {
+                                'component': 'VCol',
+                                'props': {
+                                    'cols': 12,
+                                    'md': 6
+                                },
+                                'content': [
+                                    {
+                                        'component': 'VTextField',
+                                        'props': {
+                                            'model': 'video_formats',
+                                            'label': '可整理媒体文件扩展名',
+                                            'placeholder': 'mp4,mkv,ts,iso,rmvb,avi,mov,mpeg,mpg,wmv,3gp,asf,m4v,flv,m2ts,tp,f4v'
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                'component': 'VCol',
+                                'props': {
+                                    'cols': 12,
+                                    'md': 6
+                                },
+                                'content': [
+                                    {
+                                        'component': 'VTextField',
+                                        'props': {
+                                            'model': 'dw_formats',
+                                            'label': '可下载文件扩展名',
+                                            'placeholder': 'srt,ssa,ass'
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
                     {
                         'component': 'VRow',
                         'content': [
@@ -897,7 +944,9 @@ class CloudStrmwebdav(_PluginBase):
             "monitor_confs": "",
             "alist_webdav":False,
             "dav_user": "",
-            "dav_pass": ""
+            "dav_pass": "",
+            "video_formats":"mp4,mkv,ts,iso,rmvb,avi,mov,mpeg,mpg,wmv,3gp,asf,m4v,flv,m2ts,tp,f4v",
+            "dw_formats": "srt,ssa,ass"
         }
 
     def get_page(self) -> List[dict]:
