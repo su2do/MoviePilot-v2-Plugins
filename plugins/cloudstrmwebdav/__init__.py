@@ -94,8 +94,8 @@ class CloudStrmwebdav(_PluginBase):
             self._dav_pass = config.get("dav_pass")
             self._video_format = config.get("video_formats")
             self._dw_format = config.get("dw_formats")
-            self._video_formats = add_dot_prefix(config.get("video_formats"))
-            self._dw_formats = add_dot_prefix(config.get("dw_formats"))
+            self._video_formats = self.add_dot_prefix(config.get("video_formats"))
+            self._dw_formats = self.add_dot_prefix(config.get("dw_formats"))
 
         # 停止现有任务
         self.stop_service()
@@ -278,7 +278,7 @@ class CloudStrmwebdav(_PluginBase):
                             continue
                         # 不复制非媒体文件时直接过滤掉非媒体文件
                         #if not self._copy_files and not source_file.lower().endswith(self._video_formats):
-                        if not self._copy_files and Path(file).suffix.lower() not in self._video_formats:
+                        if not self._copy_files and not any(source_file.lower().endswith(suffix) for suffix in self._video_formats):
                             continue
                         if source_file not in self.__cloud_files:
                             logger.info(f"扫描到新文件 {source_file}，正在开始处理")
@@ -289,8 +289,6 @@ class CloudStrmwebdav(_PluginBase):
                             __save_flag = True
                         else:
                             logger.debug(f"{source_file} 已在缓存中！跳过处理")
-
-            
 
             # 重新保存json文件
             if __save_flag:
@@ -330,7 +328,7 @@ class CloudStrmwebdav(_PluginBase):
 
                         # 不复制非媒体文件时直接过滤掉非媒体文件
                         # if not self._copy_files and not file.lower().endswith(self._video_formats):
-                        if not self._copy_files and Path(file).suffix.lower() not in self._video_formats:
+                        if not self._copy_files and not any(source_file.lower().endswith(suffix) for suffix in self._video_formats):
                             continue
 
                         logger.info(f"扫描到新文件 {source_file}，正在开始处理")
@@ -348,19 +346,15 @@ class CloudStrmwebdav(_PluginBase):
                         # logger.info(f"{source_file} 是回收站或隐藏的文件，跳过处理")
                         continue
                     # 不复制非媒体文件时直接过滤掉非媒体文件
-                    if not self._copy_files and not source_file.lower().endswith(self._video_formats):
+                    #if not self._copy_files and not source_file.lower().endswith in self._video_formats:
+                    if not self._copy_files and not any(source_file.lower().endswith(suffix) for suffix in self._video_formats):
                         continue
-                    if source_file not in self.__cloud_files:
-                        logger.info(f"扫描到新文件 {source_file}，正在开始处理")
-                        # 云盘文件json新增
-                        self.__cloud_files.append(source_file)
-                        # 扫描云盘文件，判断是否有对应strm
-                        self.__strm(source_file)
-                        __save_flag = True
-                    else:
-                        logger.debug(f"{source_file} 已在缓存中！跳过处理")
-
-
+                        
+                    logger.info(f"扫描到新文件 {source_file}，正在开始处理")
+                    # 云盘文件json新增
+                    self.__cloud_files.append(source_file)
+                    # 扫描云盘文件，判断是否有对应strm
+                    self.__strm(source_file)
 
         # 写入本地文件
         if self.__cloud_files:
@@ -368,7 +362,6 @@ class CloudStrmwebdav(_PluginBase):
         else:
             logger.warning(f"未获取到文件列表")
 
-    @staticmethod
     def add_dot_prefix(self,s):
         """
         将逗号分隔的字符串转换为具有点前缀的列表
