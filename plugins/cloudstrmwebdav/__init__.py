@@ -29,7 +29,7 @@ class CloudStrmwebdav(_PluginBase):
     # 插件图标
     plugin_icon = "https://raw.githubusercontent.com/thsrite/MoviePilot-Plugins/main/icons/create.png"
     # 插件版本
-    plugin_version = "4.4.1.9"
+    plugin_version = "4.4.2"
     # 插件作者
     plugin_author = "su2do"
     # 作者主页
@@ -254,7 +254,8 @@ class CloudStrmwebdav(_PluginBase):
                                 continue
 
                             # 不复制非媒体文件时直接过滤掉非媒体文件
-                            if not self._copy_files and not file.lower().endswith(self._video_formats):
+                            if not self._copy_files and Path(file).suffix.lower() not in self._video_formats:
+                            #if not self._copy_files and not file.lower().endswith(self._video_formats):
                                 continue
 
                             if source_file not in self.__cloud_files:
@@ -276,7 +277,8 @@ class CloudStrmwebdav(_PluginBase):
                             logger.info(f"{source_file} 是回收站或隐藏的文件，跳过处理")
                             continue
                         # 不复制非媒体文件时直接过滤掉非媒体文件
-                        if not self._copy_files and not source_file.lower().endswith(self._video_formats):
+                        #if not self._copy_files and not source_file.lower().endswith(self._video_formats):
+                        if not self._copy_files and Path(file).suffix.lower() not in self._video_formats:
                             continue
                         if source_file not in self.__cloud_files:
                             logger.info(f"扫描到新文件 {source_file}，正在开始处理")
@@ -327,7 +329,8 @@ class CloudStrmwebdav(_PluginBase):
                             continue
 
                         # 不复制非媒体文件时直接过滤掉非媒体文件
-                        if not self._copy_files and not file.lower().endswith(self._video_formats):
+                        # if not self._copy_files and not file.lower().endswith(self._video_formats):
+                        if not self._copy_files and Path(file).suffix.lower() not in self._video_formats:
                             continue
 
                         logger.info(f"扫描到新文件 {source_file}，正在开始处理")
