@@ -94,8 +94,8 @@ class CloudStrmwebdav(_PluginBase):
             self._dav_pass = config.get("dav_pass")
             self._video_format = config.get("video_formats")
             self._dw_format = config.get("dw_formats")
-            self._video_formats = self.add_dot_prefix(config.get("video_formats"))
-            self._dw_formats = self.add_dot_prefix(config.get("dw_formats"))
+            self._video_formats = add_dot_prefix(config.get("video_formats"))
+            self._dw_formats = add_dot_prefix(config.get("dw_formats"))
 
         # 停止现有任务
         self.stop_service()
@@ -368,6 +368,7 @@ class CloudStrmwebdav(_PluginBase):
         else:
             logger.warning(f"未获取到文件列表")
 
+    @staticmethod
     def add_dot_prefix(self,s):
         """
         将逗号分隔的字符串转换为具有点前缀的列表
